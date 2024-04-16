@@ -33,6 +33,7 @@ contract Lottery {
     uint256 rand = random();
     uint256 index = rand%players.length;
     winner = players[index];
+    players = new address payable [](0);
   }
 
   function payWinner() public {
