@@ -12,13 +12,17 @@ contract Lottery {
     manager = msg.sender;
   }
 
+  modifier onlyOwner {
+    msg.sender==manager;
+    _;
+  }
+
   function participate() public payable {
      require(msg.value==1 ether, "you have to submit 1 ether");
      players.push(payable(msg.sender));
   }
 
-  function getBalance() public view returns(uint256){
-    require(manager==msg.sender, "you are not the manager");
+  function getBalance() public view onlyOwner returns(uint256) {
     return address(this).balance;
   }
 
@@ -26,8 +30,7 @@ contract Lottery {
    return uint(keccak256 (abi.encodePacked(block.prevrandao, block.timestamp, players.length)));
   }
 
-  function pickWinner() public {
-    require (manager==msg.sender, "you are not the manager");
+  function pickWinner() public onlyOwner {
     require(players.length>=3, "Player are less than 3");
 
     uint256 rand = random();
@@ -36,7 +39,7 @@ contract Lottery {
     players = new address payable [](0);
   }
 
-  function payWinner() public {
+  function payWinner() public onlyOwner{
     uint256 transferWinner = address(this).balance;
 
     (bool success,) = msg.sender.call{value: transferWinner}("");
