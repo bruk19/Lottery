@@ -35,4 +35,11 @@ contract Lottery {
     winner = players[index];
   }
 
+  function payWinner() public {
+    uint256 transferWinner = address(this).balance;
+
+    (bool success,) = msg.sender.call{value: transferWinner}("");
+    require(success, "not transfer to the winner");
+  }
+
 }
