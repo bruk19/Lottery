@@ -11,4 +11,19 @@ contract Lottery {
   constructor() {
     manager = msg.sender;
   }
+
+  function participate() public payable {
+     require(msg.value==1 ether, "you have to submit 1 ether");
+     players.push(payable(msg.sender));
+  }
+
+  function getBalance() public view returns(uint256){
+    require(manager==msg.sender, "you are not the manager");
+    return address(this).balance;
+  }
+
+  function random() internal view returns(uint256){
+   return uint(keccak256 (abi.encodePacked(block.prevrandao, block.timestamp, players.length)));
+  }
+
 }
