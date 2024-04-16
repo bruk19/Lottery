@@ -1,5 +1,6 @@
 require("hardhat-deploy");
 require("dotenv").config();
+require("@nomicfoundation/hardhat-toolbox");
 
 const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;

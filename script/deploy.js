@@ -1,27 +1,23 @@
 const hre = require("hardhat");
 
-async function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(), ms);
-  });
-}
-
 async function main() {
-  const initialAmount = hre.ethers.utils.parseEther("1");
-
+  // Deploy the Lottery contract
   const Lottery = await hre.ethers.getContractFactory("Lottery");
-  const contract = await Lottery.deploy({ value: initialAmount });
+  const [deployer] = await hre.ethers.getSigners();
+  const contract = await Lottery.deploy();
 
-  await contract.deployed();
-  console.log(`Lottery contract deployed to ${contract.address}`);
+  console.log("Lottery contract deployed to:", contract.address);
 
-  await sleep(45 * 1000);
-  await sleep(45 * 1000);
+  // Wait for the contract to be deployed
+  await contract.deployTransaction.wait();
 
+  // Verify the contract on Etherscan
   await hre.run("verify:verify", {
     address: contract.address,
     constructorArguments: [],
   });
+
+  console.log("Lottery contract verified on Etherscan!");
 }
 
 main().catch((error) => {
