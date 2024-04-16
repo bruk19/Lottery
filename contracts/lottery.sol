@@ -26,4 +26,13 @@ contract Lottery {
    return uint(keccak256 (abi.encodePacked(block.prevrandao, block.timestamp, players.length)));
   }
 
+  function pickWinner() public {
+    require (manager==msg.sender, "you are not the manager");
+    require(players.length>=3, "Player are less than 3");
+
+    uint256 rand = random();
+    uint256 index = rand%players.length;
+    winner = players[index];
+  }
+
 }
